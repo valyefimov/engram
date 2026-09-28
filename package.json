@@ -1,0 +1,74 @@
+{
+  "name": "@vefimov/engram",
+  "version": "0.1.0",
+  "description": "A second brain for AI coding agents — long-term, structured, queryable project memory over MCP.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Valentyn Yefimov <valentine.efimov@gmail.com>",
+  "homepage": "https://valyefimov.github.io/engram/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valyefimov/engram.git"
+  },
+  "bugs": {
+    "url": "https://github.com/valyefimov/engram/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "memory",
+    "ai-agents",
+    "claude-code",
+    "cursor",
+    "knowledge-graph",
+    "adr",
+    "context"
+  ],
+  "bin": {
+    "engram": "dist/bin/engram.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "skills",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && chmod +x dist/bin/engram.js",
+    "dev": "tsx src/bin/engram.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build",
+    "media": "node scripts/media/render.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "chalk": "^6.0.1",
+    "commander": "^15.0.0",
+    "ora": "^9.4.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitepress": "^1.6.4",
+    "vitest": "^5.0.4"
+  }
+}

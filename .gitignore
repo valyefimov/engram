@@ -1,0 +1,17 @@
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+
+# engram: the SQLite file is a local cache, memories.jsonl is the source of truth
+.engram/engram.db
+.engram/engram.db-*
+
+# docs
+docs/.vitepress/cache/
+docs/.vitepress/dist/
+
+# local tooling
+.claude/
+.media/

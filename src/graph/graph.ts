@@ -64,7 +64,37 @@ export function lineage(engram: Engram, id: string): Memory[] {
     for (const l of incoming) if (l.relation === 'supersedes') visit(l.from);
   };
   visit(id);
-  return chain.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+  return chronological(engram, chain);
+}
+
+/**
+ * Order memories oldest → newest. `supersedes` edges win over timestamps:
+ * two memories written in the same millisecond still come out in the order
+ * the history says they happened.
+ */
+export function chronological(engram: Engram, memories: Memory[]): Memory[] {
+  const ids = new Set(memories.map((m) => m.id));
+  const before = new Map<string, Set<string>>(); // id → ids that must come first
+  for (const m of memories) {
+    for (const l of engram.links(m.id).outgoing) {
+      if (l.relation === 'supersedes' && ids.has(l.to)) {
+        if (!before.has(m.id)) before.set(m.id, new Set());
+        before.get(m.id)!.add(l.to);
+      }
+    }
+  }
+  const byTime = [...memories].sort((a, b) => a.createdAt.localeCompare(b.createdAt) || a.id.localeCompare(b.id));
+  const done = new Set<string>();
+  const out: Memory[] = [];
+  while (out.length < byTime.length) {
+    // the earliest memory whose predecessors are all placed (cycles fall back to time order)
+    const next =
+      byTime.find((m) => !done.has(m.id) && [...(before.get(m.id) ?? [])].every((p) => done.has(p))) ??
+      byTime.find((m) => !done.has(m.id))!;
+    done.add(next.id);
+    out.push(next);
+  }
+  return out;
 }
 
 export interface WhyEntry {
@@ -126,9 +156,7 @@ export function why(engram: Engram, topic: string, opts: { limit?: number } = {}
 
   return {
     topic,
-    timeline: [...entries.values()].sort((a, b) =>
-      a.memory.createdAt.localeCompare(b.memory.createdAt),
-    ),
+    timeline: chronological(engram, [...entries.values()].map((e) => e.memory)).map((m) => entries.get(m.id)!),
     pitfalls,
   };
 }

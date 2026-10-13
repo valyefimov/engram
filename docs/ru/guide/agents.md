@@ -1,6 +1,6 @@
 # Агенты и редакторы
 
-engram — стандартный MCP-сервер, работающий через stdio:
+engram работает как обычный MCP-сервер через stdio:
 
 ```json
 {
@@ -10,7 +10,7 @@ engram — стандартный MCP-сервер, работающий чер�
 }
 ```
 
-Сервер находит проект, поднимаясь от рабочей директории к ближайшей `.engram/` (или корню git). Переопределить можно через `--root <dir>` или `ENGRAM_ROOT`.
+Сервер находит проект, поднимаясь от рабочей директории к ближайшей `.engram/` или к корню git. Изменить это можно через `--root <dir>` или переменную `ENGRAM_ROOT`.
 
 ## Claude Code
 
@@ -18,13 +18,13 @@ engram — стандартный MCP-сервер, работающий чер�
 engram init --agent claude
 ```
 
-Создаёт `.mcp.json`, ставит skills в `.claude/skills/` и добавляет раздел engram в `CLAUDE.md`. Или вручную:
+Команда создаёт `.mcp.json`, копирует skills в `.claude/skills/` и добавляет раздел про engram в `CLAUDE.md`. Если хотите зарегистрировать сервер вручную:
 
 ```bash
 claude mcp add engram -- npx -y @vefimov/engram serve
 ```
 
-Skills становятся slash-командами: `/recall`, `/why-we-did-this`, `/remember-decision`, `/avoid-past-mistakes`, `/project-summary`, `/session-handoff`. Для всех проектов сразу: `engram skills install --global`.
+Skills становятся slash-командами: `/recall`, `/why-we-did-this`, `/remember-decision`, `/avoid-past-mistakes`, `/project-summary`, `/session-handoff`. Чтобы поставить их для всех проектов, выполните `engram skills install --global`.
 
 ## Cursor
 
@@ -32,18 +32,18 @@ Skills становятся slash-командами: `/recall`, `/why-we-did-th
 engram init --agent cursor
 ```
 
-Создаёт `.cursor/mcp.json` и всегда применяемое правило `.cursor/rules/engram.mdc`. Skills доступны как MCP prompts.
+Команда создаёт `.cursor/mcp.json` и всегда применяемое правило `.cursor/rules/engram.mdc`. Skills доступны как MCP prompts.
 
 ## Codex CLI, Windsurf, Zed и другие
 
-Добавьте сервер в MCP-конфиг клиента (JSON выше; Codex: `~/.codex/config.toml` `[mcp_servers.engram]`, Windsurf: `~/.codeium/windsurf/mcp_config.json`, Zed: `context_servers`). Затем добавьте инструкции в `AGENTS.md`:
+Для них в `init` нет готовой настройки. Каждый клиент хранит MCP-серверы в своей конфигурации, поэтому добавьте те же `command` и `args`, что в JSON выше, в формате, который описан в документации клиента. Затем положите инструкции в `AGENTS.md`:
 
 ```bash
 engram init --agent agents-md
 ```
 
-Клиенты без системы skills всё равно получают каждый skill как **MCP prompt** с тем же именем.
+Клиент без системы skills всё равно получит каждый skill как MCP prompt с тем же именем.
 
-## Несколько агентов — одна память
+## Несколько агентов, одна память
 
-Все клиенты смотрят в одну `.engram/`, поэтому Claude Code может записать решение, которое Cursor вспомнит через час. SQLite работает в режиме WAL — параллельные серверы безопасны.
+Все клиенты смотрят в одну директорию `.engram/`, поэтому Claude Code может записать решение, которое Cursor вспомнит через час. SQLite работает в режиме WAL, и это позволяет нескольким серверам пользоваться одной базой одновременно.

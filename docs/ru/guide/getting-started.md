@@ -2,8 +2,8 @@
 
 ## Требования
 
-- **Node.js 22.13+** (engram использует встроенный модуль `node:sqlite` — ничего не компилируется)
-- Агент с поддержкой MCP: Claude Code, Cursor, Windsurf, Zed, Codex CLI, …
+- Node.js 22.13 или новее. engram использует встроенный модуль `node:sqlite`, поэтому ничего не компилируется.
+- Агент с поддержкой MCP: Claude Code, Cursor, Windsurf, Zed, Codex CLI и другие.
 
 ## 1. Инициализируйте проект
 
@@ -13,7 +13,7 @@
 npx @vefimov/engram init
 ```
 
-или глобально:
+Или поставьте глобально:
 
 ```bash
 npm i -g @vefimov/engram
@@ -22,33 +22,33 @@ engram init
 
 `init` делает четыре вещи:
 
-1. Создаёт `.engram/` с `config.json`, локальным SQLite-индексом и `memories.jsonl`.
-2. Регистрирует MCP-сервер для агентов (`.mcp.json` для Claude Code, `.cursor/mcp.json` для Cursor).
-3. Ставит шесть готовых [skills](../reference/skills) в `.claude/skills/` и добавляет короткий раздел о памяти в `CLAUDE.md` (или правило Cursor / `AGENTS.md`).
-4. Индексирует то, что репозиторий уже знает: ADR становятся решениями, из git-истории извлекаются hotspots и откаченные коммиты.
+1. Создаёт `.engram/` с `config.json`, локальным индексом SQLite и `memories.jsonl`.
+2. Регистрирует MCP-сервер для агентов: `.mcp.json` для Claude Code, `.cursor/mcp.json` для Cursor.
+3. Копирует шесть [skills](../reference/skills) в `.claude/skills/` и добавляет короткий раздел о памяти в `CLAUDE.md` (или правило для Cursor, или `AGENTS.md`).
+4. Импортирует то, что репозиторий уже знает. ADR становятся решениями, а из истории git берутся часто меняющиеся файлы и откаты.
 
-Агентов можно указать явно через `--agent`:
+По умолчанию агенты определяются автоматически. Выбрать их можно через `--agent`:
 
 ```bash
 engram init --agent claude,cursor,agents-md
 engram init --agent all
 ```
 
-## 2. Перезапустите агента и скажите волшебные слова
+## 2. Перезапустите агента
 
-Перезапустите агента, чтобы он подхватил MCP-сервер, затем:
+Перезапустите агента, чтобы он подхватил MCP-сервер, и скажите:
 
 > Используй engram.
 
-Сервер отдаёт инструкции, которые объясняют агенту, *когда* читать и писать память, — обычно этого достаточно. В Claude Code skills можно вызывать напрямую: `/recall auth`, `/why-we-did-this sessions`, `/remember-decision …`.
+Сервер присылает инструкции, в которых написано, когда агенту читать и писать память, и этого обычно хватает. В Claude Code skills можно вызвать и напрямую: `/recall auth`, `/why-we-did-this sessions`, `/remember-decision …`.
 
-## 3. Смотрите, как растёт память
+## 3. Посмотрите, что он знает
 
 ```bash
-engram status             # что знает engram
+engram status             # счётчики и последняя активность
 engram recall payments    # поиск
 engram why sessions       # история темы
-engram context "добавить ретраи в платёжный клиент"   # что увидит агент
+engram context "добавить ретраи в платёжный клиент"   # брифинг, который получит агент
 engram summary            # обзор проекта
 ```
 
@@ -59,15 +59,15 @@ git add .engram/memories.jsonl .engram/config.json .mcp.json CLAUDE.md .claude/s
 git commit -m "chore: add engram project memory"
 ```
 
-`.engram/engram.db` — локальный кэш, он в `.gitignore`. Когда коллеги делают pull, их engram автоматически вливает новый `memories.jsonl`. См. [Командная память](./team).
+`.engram/engram.db` служит локальным кэшем и лежит в `.gitignore`. Когда коллега делает pull, его engram сам вливает новый `memories.jsonl`. См. [командную память](./team).
 
 ## Наполните сами
 
-Не обязательно ждать агента. Запишите то, на чём новички всегда спотыкаются:
+Ждать агента необязательно. Запишите то, на чём новички спотыкаются всегда:
 
 ```bash
 engram remember "Никаких ORM в горячем пути" -k principle -i 5 \
-  -c "Чистый SQL через query builder в src/db. ORM дважды прятал N+1."
+  -c "Чистый SQL через query builder в src/db. ORM дважды скрывал N+1."
 
 engram remember "Вебхукам Stripe нужно сырое тело запроса" -k pitfall -t payments \
   -f src/webhooks/stripe.ts -c "express.json() ломает проверку подписи."
@@ -75,22 +75,22 @@ engram remember "Вебхукам Stripe нужно сырое тело запр
 
 ## Скриншоты
 
-**`engram init`**
+`engram init`
 
 ![engram init](/screenshots/init.png)
 
-**`engram why sessions`**
+`engram why sessions`
 
 ![engram why sessions](/screenshots/why.png)
 
-**`engram check`**
+`engram check`
 
 ![engram check](/screenshots/check.png)
 
-**`engram context`**
+`engram context`
 
 ![engram context](/screenshots/context.png)
 
-**`engram status`**
+`engram status`
 
 ![engram status](/screenshots/status.png)

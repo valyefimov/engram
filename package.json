@@ -1,6 +1,6 @@
 {
   "name": "@vefimov/engram",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A second brain for AI coding agents — long-term, structured, queryable project memory over MCP.",
   "type": "module",
   "license": "MIT",

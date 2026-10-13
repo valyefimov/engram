@@ -1,6 +1,6 @@
 # Roadmap
 
-## v0.1 — memory that works ✅
+## v1.0 — memory that works ✅
 
 - MCP server: 14 tools, resources, prompts, server instructions
 - Memory store on SQLite + FTS5 (zero native deps), dedup on write
@@ -10,20 +10,20 @@
 - 6 skills, CLI, git-friendly JSONL sync with tombstones
 - Docs in English, Russian and Ukrainian
 
-## v0.3 — understanding the code
+## v1.1 — understanding the code
 
 - Code-aware indexer (tree-sitter / ts-morph): symbols as `file` nodes linked to decisions
 - Optional local embeddings (bge / nomic) for hybrid semantic + keyword recall
 - Automatic context routing for large tool outputs
 - Memory hygiene: detect stale memories whose files changed or disappeared
 
-## v0.5 — teams
+## v1.2 — teams
 
 - Multiple projects and a personal cross-project memory
 - Sync beyond git (optional server)
 - Web UI to explore and edit the graph
 
-## v1.0
+## v2.0
 
 - Local embeddings out of the box
 - One-command integrations for popular agents

@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.1.0 — 2026-10-13
+## 1.0.0 — 2026-10-13
 
-First public release.
+First public release. (`0.1.0` was published briefly as a pre-release and is superseded by this version.)
 
 - MCP server with 14 tools (`engram_remember`, `engram_recall`, `engram_why`, `engram_check`, `engram_context`, sessions, graph, index…), resources and prompts
 - Memory store on built-in `node:sqlite` with FTS5 search, dedup on write, statuses and history

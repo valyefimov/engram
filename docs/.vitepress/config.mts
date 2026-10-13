@@ -52,7 +52,7 @@ function themeFor(prefix: string, t: Strings): DefaultTheme.Config {
       { text: t.guide, link: `${prefix}/guide/getting-started` },
       { text: t.reference, link: `${prefix}/reference/mcp-tools` },
       { text: t.roadmap, link: `${prefix}/roadmap` },
-      { text: 'v0.1.0', items: [{ text: 'Changelog', link: `${repo}/blob/main/CHANGELOG.md` }] },
+      { text: 'v1.0.0', items: [{ text: 'Changelog', link: `${repo}/blob/main/CHANGELOG.md` }] },
     ],
     sidebar: sidebar(prefix, t),
     editLink: { pattern: `${repo}/edit/main/docs/:path`, text: t.edit },

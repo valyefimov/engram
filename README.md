@@ -154,10 +154,10 @@ Read more: [Concepts](https://valyefimov.github.io/engram/guide/concepts) · [Ho
 
 ## Roadmap
 
-- **v0.1** — MCP server, memory + graph, context compressor, sessions, ADR/git indexer, skills, CLI, JSONL sync ✅
-- **v0.3** — code-aware indexer (tree-sitter), optional local embeddings, stale-memory detection
-- **v0.5** — multiple projects, sync beyond git, web UI for the graph
-- **v1.0** — embeddings out of the box, one-command integrations, plugins
+- **v1.0** — MCP server, memory + graph, context compressor, sessions, ADR/git indexer, skills, CLI, JSONL sync ✅
+- **v1.1** — code-aware indexer (tree-sitter), optional local embeddings, stale-memory detection
+- **v1.2** — multiple projects, sync beyond git, web UI for the graph
+- **v2.0** — embeddings out of the box, one-command integrations, plugins
 
 ## Contributing
 

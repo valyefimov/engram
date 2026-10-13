@@ -6,7 +6,7 @@ import { parseAdr } from '../src/indexer/adr.js';
 import { hotspots, scars, type Commit } from '../src/indexer/git.js';
 import { indexProject } from '../src/indexer/index.js';
 import { Engram } from '../src/store/engram.js';
-import { tempDir } from './helpers.js';
+import { tempDir, track } from './helpers.js';
 
 describe('ADR parser', () => {
   it('reads Nygard style ADRs', () => {
@@ -44,7 +44,7 @@ describe('indexProject', () => {
     mkdirSync(join(root, 'docs/adr'), { recursive: true });
     writeFileSync(join(root, 'docs/adr/0001-redis.md'), '# 1. Redis sessions\n\n## Status\n\nSuperseded by ADR-0002\n');
     writeFileSync(join(root, 'docs/adr/0002-postgres.md'), '# 2. Postgres sessions\n\n## Status\n\nAccepted\n');
-    const e = Engram.open({ root });
+    const e = track(Engram.open({ root }));
     const first = indexProject(e, { git: false });
     expect(first.adr).toMatchObject({ added: 2, linked: 1 });
     const second = indexProject(e, { git: false });
@@ -62,7 +62,7 @@ describe('indexProject', () => {
     git('commit', '-qm', 'add a');
     writeFileSync(join(root, 'a.txt'), '2');
     git('commit', '-qam', 'Revert "bad idea"');
-    const e = Engram.open({ root });
+    const e = track(Engram.open({ root }));
     const r = indexProject(e, { adr: false });
     expect(r.git).toMatchObject({ commits: 2, scars: 1 });
     expect(indexProject(e, { adr: false }).git.scars).toBe(0);

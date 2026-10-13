@@ -5,9 +5,8 @@
 <h1 align="center">engram</h1>
 
 <p align="center">
-  <b>A second brain for your coding agent.</b><br>
-  Long-term, structured, queryable project memory — decisions, pitfalls, principles and past sessions —<br>
-  for Claude Code, Cursor and any MCP client. Local-first. Shared through git.
+  Long-term memory for AI coding agents.<br>
+  It keeps decisions, pitfalls and session notes in your repo and gives them to the agent over MCP.
 </p>
 
 <p align="center">
@@ -15,7 +14,7 @@
   <a href="https://www.npmjs.com/package/@vefimov/engram"><img src="https://img.shields.io/npm/v/@vefimov/engram?color=8b5cf6" alt="npm"></a>
   <img src="https://img.shields.io/badge/node-%E2%89%A522.13-22d3ee" alt="node >= 22.13">
   <img src="https://img.shields.io/badge/MCP-server-a78bfa" alt="MCP">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT"></a>
+  <a href="https://github.com/valyefimov/engram/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT"></a>
 </p>
 
 <p align="center">
@@ -27,43 +26,58 @@
 </p>
 
 <p align="center">
-  <a href="https://valyefimov.github.io/engram/demo.mp4"><img src="https://raw.githubusercontent.com/valyefimov/engram/main/docs/public/demo-poster.png" width="760" alt="engram demo — click to watch"></a>
+  <a href="https://valyefimov.github.io/engram/demo.mp4"><img src="https://raw.githubusercontent.com/valyefimov/engram/main/docs/public/demo-poster.png" width="760" alt="engram demo, click to watch"></a>
 </p>
 
 ---
 
-AI coding agents have amnesia. Every session starts from zero: the agent re-reads the same files, re-proposes the approach you rejected last month and re-introduces the bug you already fixed twice.
+A coding agent forgets everything when the session ends. The next one reads the same files again, suggests the approach you dropped last month, and can reintroduce a bug you already fixed twice.
 
-**engram gives your agent a memory.** It remembers what a good teammate would — *why* things are the way they are — and serves it to the agent over [MCP](https://modelcontextprotocol.io) exactly when it is needed.
+engram stores what a teammate would remember: why the code looks the way it does. Decisions go in with their reasoning, and so do the options you rejected. Mistakes you paid for go in as pitfalls. Everything lives in `.engram/` inside your repo, and the agent reads it through an MCP server.
 
 ```bash
 npx @vefimov/engram init
 ```
 
-Then tell your agent: **"use engram."** From that moment it:
+Restart your agent and tell it "use engram". From then on, it should:
 
-- 🧠 opens every task with a short briefing — principles, relevant decisions, known pitfalls, where the last session stopped;
-- 💬 says *"three weeks ago we decided not to use Redis because of X — want to see that discussion?"*;
-- 🪤 checks its plan against old mistakes **before** writing code;
-- ✍️ records decisions, rejected options and scars as they happen — no one has to remember to write ADRs;
-- 🔎 answers *"where did we discuss auth?"* even if that was forty conversations ago.
+- start a task by asking engram for a short briefing: project principles, relevant decisions, known pitfalls, and where the last session stopped;
+- check a plan against recorded pitfalls and rejected options before it writes code;
+- write down decisions and problems as they come up, and mark a decision as superseded when you change your mind;
+- answer "why do we do it this way?" from the recorded history instead of guessing.
 
-## Features
+The server sends the agent instructions on when to read and when to write, so "use engram" is meant to be enough. The test suite drives the server through the MCP SDK client, and the CLI is exercised end to end. How well a given agent follows the instructions varies, and it hasn't been checked in every client.
 
-| | |
-| --- | --- |
-| **Knowledge graph** | Memories linked with typed edges: `supersedes`, `rejected_because`, `caused_by`, `depends_on`, `implements`, `part_of` |
-| **History, not overwrite** | Changing your mind supersedes a decision instead of erasing it. Rejected options are kept — that's what makes "why not X?" answerable |
-| **`why` timelines** | `engram why sessions` → what we picked, what it replaced, what we rejected, and why |
-| **Pitfall check** | `engram_check` compares a plan against recorded pitfalls and rejected approaches |
-| **Context compressor** | Token-budgeted packs: important memories in full, the next tier in one line, the rest one `recall` away |
-| **Session continuity** | Handoff notes — done / decided / open / next — that the next session starts from |
-| **Repo indexer** | Imports existing ADRs (Nygard, MADR) as decisions; learns hotspots and reverts from git history |
-| **Fast multilingual search** | SQLite FTS5 + BM25, stemming, Unicode — English, Russian, Ukrainian and more |
-| **Team memory** | A sorted `memories.jsonl` you commit; merges on `git pull`, last-writer-wins, tombstones for deletes |
-| **Six skills** | `remember-decision`, `recall`, `why-we-did-this`, `avoid-past-mistakes`, `project-summary`, `session-handoff` |
-| **Any agent** | Claude Code, Cursor, Windsurf, Zed, Codex CLI — one memory for all of them |
-| **Zero native deps** | Built on Node's built-in `node:sqlite`. `npx` just works |
+## What it stores
+
+Each memory has a kind (decision, pitfall, principle, fact, note, discussion, file or session), a title, free text, tags, related files, a status and an importance from 1 to 5. Memories link to each other with typed edges: `supersedes`, `rejected_because`, `caused_by`, `depends_on`, `implements`, `part_of`, `relates_to`.
+
+When you change your mind, the old decision is marked superseded and linked to the new one. It isn't deleted. Rejected options stay too, which is what lets `engram why` answer "why didn't we use Redis?".
+
+## Quick start
+
+```bash
+# in your repository
+npx @vefimov/engram init            # or: npm i -g @vefimov/engram && engram init
+```
+
+`init` creates `.engram/`, registers the MCP server (`.mcp.json` for Claude Code, `.cursor/mcp.json` for Cursor), copies six skills into `.claude/skills/`, adds a short section to `CLAUDE.md` or `AGENTS.md`, and imports your ADRs and git history.
+
+Then commit the memory so your team gets it too:
+
+```bash
+git add .engram/memories.jsonl .engram/config.json .mcp.json CLAUDE.md .claude/skills
+```
+
+Any other MCP client can use the same server entry:
+
+```json
+{
+  "mcpServers": {
+    "engram": { "command": "npx", "args": ["-y", "@vefimov/engram", "serve"] }
+  }
+}
+```
 
 ## Screenshots
 
@@ -86,82 +100,63 @@ Then tell your agent: **"use engram."** From that moment it:
   </tr>
 </table>
 
-## Quick start
-
-```bash
-# in your repository
-npx @vefimov/engram init            # or: npm i -g @vefimov/engram && engram init
-```
-
-`init` creates `.engram/`, registers the MCP server (`.mcp.json`, `.cursor/mcp.json`), installs skills into `.claude/skills/`, adds a memory section to `CLAUDE.md` / `AGENTS.md`, and indexes your ADRs and git history.
-
-Restart your agent and say **"use engram"**. Then commit the memory:
-
-```bash
-git add .engram/memories.jsonl .engram/config.json .mcp.json CLAUDE.md .claude/skills
-```
-
-Manual MCP setup for any client:
-
-```json
-{
-  "mcpServers": {
-    "engram": { "command": "npx", "args": ["-y", "@vefimov/engram", "serve"] }
-  }
-}
-```
-
 ## MCP tools
 
-| Tool | |
+| Tool | What it does |
 | --- | --- |
-| `engram_session_start` / `engram_session_end` | Open a session with a context pack · close it with a handoff summary |
-| `engram_remember` / `engram_update` / `engram_forget` | Write memory (with `supersedes` and `links`) |
-| `engram_recall` / `engram_get` | Search with filters · one memory with links |
-| `engram_why` | Timeline of a topic |
-| `engram_check` | Check a plan against pitfalls and rejected approaches |
-| `engram_context` / `engram_summary` | Token-budgeted briefing · project overview |
-| `engram_link` / `engram_related` | Build and walk the knowledge graph |
-| `engram_index` | Re-index ADRs and git history |
+| `engram_session_start`, `engram_session_end` | Open a session and get a context pack; close it with a handoff summary |
+| `engram_remember`, `engram_update`, `engram_forget` | Write memory, with `supersedes` and `links` |
+| `engram_recall`, `engram_get` | Search with filters; read one memory with its links |
+| `engram_why` | The history of a topic as a timeline |
+| `engram_check` | Compare a plan with recorded pitfalls and rejected options |
+| `engram_context`, `engram_summary` | A briefing that fits a token budget; a project overview |
+| `engram_link`, `engram_related` | Add and walk edges in the graph |
+| `engram_index` | Re-import ADRs and git history |
 
-Plus resources (`engram://summary`, `engram://memory/{id}`) and every skill as an MCP prompt. [Full reference →](https://valyefimov.github.io/engram/reference/mcp-tools)
+The server also exposes `engram://summary` and `engram://memory/{id}` as resources, and each bundled skill as an MCP prompt. See the [reference](https://valyefimov.github.io/engram/reference/mcp-tools) for the arguments.
 
 ## CLI
 
 ```bash
-engram status                                   # what engram knows
+engram status                                   # counts and last activity
 engram recall payments --kind pitfall           # search
 engram why sessions                             # history of a topic
-engram check "move sessions to MongoDB"         # past mistakes that apply
-engram context "speed up login" -b 1500         # what the agent sees
+engram check "move sessions to MongoDB"         # pitfalls that apply to a plan
+engram context "speed up login" -b 1500        # what the agent would see
 engram remember "No ORMs in the hot path" -k principle -i 5 -c "…"
 engram link dec_a1 rejected_because pit_b2
-engram export --format md -o docs/MEMORY.md     # human-readable dump
+engram export --format md -o docs/MEMORY.md     # readable dump
 ```
 
-[All commands →](https://valyefimov.github.io/engram/reference/cli)
+All commands are in the [CLI reference](https://valyefimov.github.io/engram/reference/cli).
 
 ## How it works
 
 ```
 Agent ──MCP──▶ engram server ──▶ memory store (SQLite + FTS5)  ──▶ .engram/engram.db       (local index)
-                    │            graph engine · context compressor
+                    │            graph engine, context compressor
                     │            indexer (ADRs, git)            ──▶ .engram/memories.jsonl (commit this)
-                    └── tools · resources · prompts (skills)
+                    └── tools, resources, prompts (skills)
 ```
 
-Read more: [Concepts](https://valyefimov.github.io/engram/guide/concepts) · [How it works](https://valyefimov.github.io/engram/guide/how-it-works) · [Team memory](https://valyefimov.github.io/engram/guide/team)
+The database is a local index built on Node's built-in `node:sqlite`, so there is nothing to compile. `memories.jsonl` is the source of truth: one record per line, sorted by id, so diffs stay small and merges rarely conflict. When it changes under you (a `git pull`, say), engram merges it into the local index the next time it opens. The newest `updatedAt` wins, and deletions travel as tombstones.
+
+The context pack fits memories into a token budget. The most important ones go in full, the next tier is cut to one line each, and the rest is left out with a note on how many were dropped.
+
+More detail: [concepts](https://valyefimov.github.io/engram/guide/concepts), [how it works](https://valyefimov.github.io/engram/guide/how-it-works), [team memory](https://valyefimov.github.io/engram/guide/team).
 
 ## Roadmap
 
-- **v1.0** — MCP server, memory + graph, context compressor, sessions, ADR/git indexer, skills, CLI, JSONL sync ✅
-- **v1.1** — code-aware indexer (tree-sitter), optional local embeddings, stale-memory detection
-- **v1.2** — multiple projects, sync beyond git, web UI for the graph
-- **v2.0** — embeddings out of the box, one-command integrations, plugins
+- 1.0: the MCP server, memory and graph, context packs, sessions, the ADR and git importer, skills, the CLI and JSONL sync. This is what you get today.
+- 1.1: a code-aware indexer (tree-sitter), optional local embeddings, detection of stale memories.
+- 1.2: several projects, sync beyond git, a web UI for the graph.
+- 2.0: embeddings out of the box, one-command setup for more agents, plugins.
+
+These are plans, not promises.
 
 ## Contributing
 
-Issues and PRs are welcome — see [CONTRIBUTING.md](https://github.com/valyefimov/engram/blob/main/CONTRIBUTING.md).
+Issues and pull requests are welcome. See [CONTRIBUTING.md](https://github.com/valyefimov/engram/blob/main/CONTRIBUTING.md).
 
 ## License
 

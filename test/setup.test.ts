@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { registerMcp, setupAgent, upsertSnippet } from '../src/cli/setup.js';
-import { loadSkills } from '../src/skills/catalog.js';
+import { loadSkills, parseSkill } from '../src/skills/catalog.js';
 import { tempDir } from './helpers.js';
 
 describe('agent setup', () => {
@@ -17,6 +17,11 @@ describe('agent setup', () => {
       'why-we-did-this',
     ]);
     for (const s of skills) expect(s.body).toContain('$ARGUMENTS');
+  });
+
+  it('parses skills checked out with CRLF line endings', () => {
+    const skill = parseSkill('SKILL.md', '---\r\nname: x\r\ndescription: y\r\n---\r\n\r\nbody $ARGUMENTS\r\n');
+    expect(skill).toMatchObject({ name: 'x', description: 'y', body: 'body $ARGUMENTS' });
   });
 
   it('merges into an existing .mcp.json', () => {

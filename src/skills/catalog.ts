@@ -17,7 +17,8 @@ export function skillsDir(): string {
 }
 
 export function parseSkill(file: string, text: string): Skill {
-  const m = text.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+  // git on Windows may check files out with CRLF
+  const m = text.replace(/\r\n/g, '\n').match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
   if (!m) throw new Error(`engram: ${file} has no front matter`);
   const meta: Record<string, string> = {};
   for (const line of m[1]!.split('\n')) {

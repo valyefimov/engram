@@ -2,10 +2,10 @@
 
 ## Requirements
 
-- **Node.js 22.13+** (engram uses the built-in `node:sqlite` module — nothing to compile)
-- An MCP-capable agent: Claude Code, Cursor, Windsurf, Zed, Codex CLI, …
+- Node.js 22.13 or newer. engram uses the built-in `node:sqlite` module, so nothing is compiled.
+- An agent that speaks MCP: Claude Code, Cursor, Windsurf, Zed, Codex CLI and others.
 
-## 1. Initialize your project
+## 1. Initialize the project
 
 In the root of your repository:
 
@@ -13,7 +13,7 @@ In the root of your repository:
 npx @vefimov/engram init
 ```
 
-or install globally:
+Or install it globally:
 
 ```bash
 npm i -g @vefimov/engram
@@ -23,51 +23,51 @@ engram init
 `init` does four things:
 
 1. Creates `.engram/` with `config.json`, a local SQLite index and `memories.jsonl`.
-2. Registers the MCP server for your agents (`.mcp.json` for Claude Code, `.cursor/mcp.json` for Cursor).
-3. Installs six ready-made [skills](../reference/skills) into `.claude/skills/` and adds a short memory section to `CLAUDE.md` (or a Cursor rule / `AGENTS.md`).
-4. Indexes what the repo already knows: ADRs become decisions, git history yields hotspots and reverted commits.
+2. Registers the MCP server for your agents: `.mcp.json` for Claude Code, `.cursor/mcp.json` for Cursor.
+3. Copies six [skills](../reference/skills) into `.claude/skills/` and adds a short memory section to `CLAUDE.md` (or a Cursor rule, or `AGENTS.md`).
+4. Imports what the repo already knows. ADRs become decisions, and git history yields frequently changed files and reverted commits.
 
-Choose agents explicitly with `--agent`:
+By default it detects your agents. You can choose them with `--agent`:
 
 ```bash
 engram init --agent claude,cursor,agents-md
 engram init --agent all
 ```
 
-## 2. Restart the agent and say the magic words
+## 2. Restart the agent
 
-Restart your agent so it picks up the new MCP server, then:
+Restart your agent so it loads the MCP server, then say:
 
 > Use engram.
 
-The server ships instructions that tell the agent *when* to read and write memory, so that is usually all it takes. In Claude Code you can also call the skills directly: `/recall auth`, `/why-we-did-this sessions`, `/remember-decision …`.
+The server sends instructions that tell the agent when to read and write memory, which should be enough. In Claude Code you can also call the skills directly: `/recall auth`, `/why-we-did-this sessions`, `/remember-decision …`.
 
-## 3. Watch memory grow
+## 3. Look at what it knows
 
 ```bash
-engram status             # what engram knows
+engram status             # counts and last activity
 engram recall payments    # search
 engram why sessions       # history of a topic
-engram context "add retries to the payment client"   # what the agent would see
+engram context "add retries to the payment client"   # the briefing an agent would get
 engram summary            # project overview
 ```
 
-## 4. Commit memory
+## 4. Commit the memory
 
 ```bash
 git add .engram/memories.jsonl .engram/config.json .mcp.json CLAUDE.md .claude/skills
 git commit -m "chore: add engram project memory"
 ```
 
-`.engram/engram.db` is a local cache and is git-ignored. When teammates pull, their engram merges the new `memories.jsonl` automatically. See [Team memory](./team).
+`.engram/engram.db` is a local cache and is git-ignored. When a teammate pulls, their engram merges the new `memories.jsonl` automatically. See [team memory](./team).
 
 ## Seed it yourself
 
-You do not have to wait for the agent. Record the things a newcomer always gets wrong:
+You don't have to wait for the agent. Write down the things newcomers always get wrong:
 
 ```bash
 engram remember "No ORMs in the hot path" -k principle -i 5 \
-  -c "Raw SQL via the query builder in src/db. ORMs hid N+1s twice."
+  -c "Raw SQL via the query builder in src/db. ORMs hid N+1 queries twice."
 
 engram remember "Stripe webhooks need the raw body" -k pitfall -t payments \
   -f src/webhooks/stripe.ts -c "express.json() breaks signature verification."
@@ -75,22 +75,22 @@ engram remember "Stripe webhooks need the raw body" -k pitfall -t payments \
 
 ## Screenshots
 
-**`engram init`**
+`engram init`
 
 ![engram init](/screenshots/init.png)
 
-**`engram why sessions`**
+`engram why sessions`
 
 ![engram why sessions](/screenshots/why.png)
 
-**`engram check`**
+`engram check`
 
 ![engram check](/screenshots/check.png)
 
-**`engram context`**
+`engram context`
 
 ![engram context](/screenshots/context.png)
 
-**`engram status`**
+`engram status`
 
 ![engram status](/screenshots/status.png)

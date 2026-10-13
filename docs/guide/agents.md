@@ -1,6 +1,6 @@
-# Agents & editors
+# Agents and editors
 
-engram is a standard MCP server launched over stdio:
+engram is a standard MCP server that runs over stdio:
 
 ```json
 {
@@ -10,7 +10,7 @@ engram is a standard MCP server launched over stdio:
 }
 ```
 
-The server finds the project by walking up from its working directory to the nearest `.engram/` (or git root). Override with `--root <dir>` or `ENGRAM_ROOT`.
+The server finds the project by walking up from its working directory to the nearest `.engram/`, or to the git root. Override this with `--root <dir>` or the `ENGRAM_ROOT` variable.
 
 ## Claude Code
 
@@ -18,13 +18,13 @@ The server finds the project by walking up from its working directory to the nea
 engram init --agent claude
 ```
 
-Writes `.mcp.json`, installs skills into `.claude/skills/`, and adds an engram section to `CLAUDE.md`. Or register by hand:
+This writes `.mcp.json`, copies the skills into `.claude/skills/` and adds an engram section to `CLAUDE.md`. To register the server by hand instead:
 
 ```bash
 claude mcp add engram -- npx -y @vefimov/engram serve
 ```
 
-Skills become slash commands: `/recall`, `/why-we-did-this`, `/remember-decision`, `/avoid-past-mistakes`, `/project-summary`, `/session-handoff`. Install them for all projects with `engram skills install --global`.
+The skills become slash commands: `/recall`, `/why-we-did-this`, `/remember-decision`, `/avoid-past-mistakes`, `/project-summary`, `/session-handoff`. To install them for every project, run `engram skills install --global`.
 
 ## Cursor
 
@@ -32,18 +32,18 @@ Skills become slash commands: `/recall`, `/why-we-did-this`, `/remember-decision
 engram init --agent cursor
 ```
 
-Writes `.cursor/mcp.json` and an always-applied rule `.cursor/rules/engram.mdc`. Skills are available as MCP prompts.
+This writes `.cursor/mcp.json` and an always-applied rule, `.cursor/rules/engram.mdc`. The skills are available as MCP prompts.
 
 ## Codex CLI, Windsurf, Zed and others
 
-Add the server to the client's MCP configuration using the JSON above (Codex: `~/.codex/config.toml` `[mcp_servers.engram]`, Windsurf: `~/.codeium/windsurf/mcp_config.json`, Zed: `context_servers`). Then add the instructions to `AGENTS.md`:
+`init` has no setup for these. Each client keeps its MCP servers in its own configuration, so add the same `command` and `args` as in the JSON above, using the format your client documents. Then put the instructions in `AGENTS.md`:
 
 ```bash
 engram init --agent agents-md
 ```
 
-Clients without a skills system still get every skill as an **MCP prompt** with the same name.
+A client without a skills system still gets every skill as an MCP prompt with the same name.
 
 ## Several agents, one memory
 
-Every client points at the same `.engram/` directory, so Claude Code can record a decision that Cursor recalls an hour later. SQLite runs in WAL mode, so concurrent servers are safe.
+Every client points at the same `.engram/` directory, so Claude Code can record a decision that Cursor recalls an hour later. SQLite runs in WAL mode, which allows several servers to use the same database at once.

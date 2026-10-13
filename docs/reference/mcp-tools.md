@@ -1,62 +1,62 @@
 # MCP tools
 
-All tools return Markdown — LLMs read it better than JSON. Errors come back as tool errors with a readable message.
+Every tool returns Markdown, which models read better than JSON. Errors come back as tool errors with a readable message.
 
 ## Reading
 
 ### `engram_session_start`
-Open a session for a goal and get the context pack.
+Opens a session for a goal and returns the context pack.
 `goal?` · `agent?` · `files?` · `budget?`
 
 ### `engram_context`
-Token-budgeted briefing for a task: principles, relevant decisions, pitfalls, last session.
-`task?` · `files?` · `budget?` (200–20000)
+A briefing for a task within a token budget: principles, relevant decisions, pitfalls, the last session.
+`task?` · `files?` · `budget?` (200 to 20000)
 
 ### `engram_recall`
 Full-text search with filters.
-`query?` · `kinds?` · `tags?` · `files?` · `include_inactive?` · `limit?` (≤ 50)
+`query?` · `kinds?` · `tags?` · `files?` · `include_inactive?` · `limit?` (up to 50)
 
 ### `engram_get`
 One memory in full, with its links. `id`
 
 ### `engram_related`
-Walk the graph around a memory, both directions. `id` · `depth?` (1–4) · `relations?`
+Walks the graph around a memory in both directions. `id` · `depth?` (1 to 4) · `relations?`
 
 ### `engram_why`
-Timeline of a topic: decisions, what they replaced, what was rejected and why, related pitfalls. `topic`
+A timeline for a topic: decisions, what they replaced, what was rejected and why, related pitfalls. `topic`
 
 ### `engram_check`
-Check a plan against pitfalls and previously rejected approaches. `plan` · `files?`
+Checks a plan against pitfalls and previously rejected approaches. `plan` · `files?`
 
 ### `engram_summary`
-Project overview from memory. `detail?`: `short` | `full`
+A project overview from memory. `detail?`: `short` or `full`
 
 ## Writing
 
 ### `engram_remember`
-Store a memory. Same kind + title as an active memory → updates it.
-`kind` · `title` · `content?` · `tags?` · `files?` · `importance?` (1–5) · `status?` · `supersedes?` · `links?: [{ to, relation, note? }]`
+Stores a memory. If an active memory has the same kind and title, it is updated instead.
+`kind` · `title` · `content?` · `tags?` · `files?` · `importance?` (1 to 5) · `status?` · `supersedes?` · `links?: [{ to, relation, note? }]`
 
 ### `engram_update`
-Edit a memory. `id` + any of `title`, `content`, `kind`, `tags`, `files`, `importance`, `status`
+Edits a memory. `id` plus any of `title`, `content`, `kind`, `tags`, `files`, `importance`, `status`
 
 ### `engram_link`
-Connect two memories. `from` · `to` · `relation` · `note?`
+Connects two memories. `from` · `to` · `relation` · `note?`
 
 ### `engram_forget`
-Archive (default) or hard-delete. `id` · `hard?`
+Archives a memory, or deletes it with `hard`. `id` · `hard?`
 
 ### `engram_session_end`
-Close the session with a handoff summary. `summary` · `session_id?` · `tags?`
+Closes the session with a handoff summary. `summary` · `session_id?` · `tags?`
 
 ### `engram_index`
-Re-run the ADR and git indexer.
+Runs the ADR and git indexer again.
 
 ## Resources
 
-- `engram://summary` — the project summary
-- `engram://memory/{id}` — a single memory (listable)
+- `engram://summary`: the project summary
+- `engram://memory/{id}`: a single memory (the list is browsable)
 
 ## Prompts
 
-Every bundled [skill](./skills) is also exposed as an MCP prompt with an optional `input` argument.
+Each bundled [skill](./skills) is also an MCP prompt, with an optional `input` argument.

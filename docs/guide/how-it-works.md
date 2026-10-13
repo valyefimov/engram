@@ -15,7 +15,7 @@
 │  FTS5 search  │  lineage, why,   │  project summary        │
 │               │  pitfall check   │                         │
 ├───────────────┴──────────────────┴─────────────────────────┤
-│  Indexer: ADRs → decisions · git → hotspots & reverts      │
+│  Indexer: ADRs → decisions · git → hotspots and reverts    │
 └──────────────────────────────┬─────────────────────────────┘
                                │
              ┌─────────────────┴──────────────────┐
@@ -26,7 +26,7 @@
 
 ## Storage
 
-engram uses Node's built-in `node:sqlite`, so there is nothing to compile and `npx` works everywhere Node 22.13+ runs. Tables: `memories`, `memories_fts` (FTS5, Porter + Unicode tokenizer), `links`, `sessions`, `tombstones`, `meta`. Migrations are append-only and tracked in `meta.schema_version`.
+engram uses Node's built-in `node:sqlite`, so there is nothing to compile and `npx` works anywhere Node 22.13 or newer runs. The tables are `memories`, `memories_fts` (FTS5 with the Porter and Unicode tokenizer), `links`, `sessions`, `tombstones` and `meta`. Migrations are append-only and tracked in `meta.schema_version`.
 
 ## Ranking
 
@@ -38,14 +38,14 @@ score = bm25(title×6, tags×3, content×1, files×1.5)
       × recency          (loses up to 30% over a year)
 ```
 
-Weak partial matches (below 20% of the best hit) are dropped.
+Weak partial matches, below 20% of the best hit, are dropped.
 
 ## The indexer
 
-`engram index` (also run by `init`) is idempotent:
+`engram index` also runs during `init`. It can be run repeatedly:
 
-- **ADRs** in `docs/adr`, `docs/decisions`, `adr`, … (configurable) are parsed — Nygard and MADR styles, front matter, `Superseded by ADR-0007` — and become `decision` memories with `supersedes` edges.
-- **Git history** (last 500 commits by default) yields a *Code hotspots* fact — files that change most often — and low-importance pitfall candidates from reverts and "fix … again" commits, for the agent to confirm or discard.
+- ADRs in `docs/adr`, `docs/decisions`, `adr` and similar folders (configurable) are parsed. It handles Nygard and MADR styles, front matter and lines like `Superseded by ADR-0007`. Each becomes a `decision` memory, with `supersedes` edges where the ADRs point at each other.
+- Git history, the last 500 commits by default, gives a "Code hotspots" fact listing the files that change most. Reverts and "fix … again" commits become low-importance pitfall candidates for the agent to confirm or discard.
 
 ## Configuration
 

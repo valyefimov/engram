@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/public/logo.svg" width="96" alt="engram logo">
+  <img src="https://raw.githubusercontent.com/valyefimov/engram/main/docs/public/logo.svg" width="96" alt="engram logo">
 </p>
 
 <h1 align="center">engram</h1>
@@ -22,12 +22,12 @@
   <a href="https://valyefimov.github.io/engram/">Documentation</a> ·
   <a href="https://valyefimov.github.io/engram/guide/getting-started">Getting started</a> ·
   <a href="https://valyefimov.github.io/engram/demo.mp4">Demo video</a> ·
-  <a href="README.ru.md">Русский</a> ·
-  <a href="README.uk.md">Українська</a>
+  <a href="https://github.com/valyefimov/engram/blob/main/translations/README.ru.md">Русский</a> ·
+  <a href="https://github.com/valyefimov/engram/blob/main/translations/README.uk.md">Українська</a>
 </p>
 
 <p align="center">
-  <a href="https://valyefimov.github.io/engram/demo.mp4"><img src="docs/public/demo-poster.png" width="760" alt="engram demo — click to watch"></a>
+  <a href="https://valyefimov.github.io/engram/demo.mp4"><img src="https://raw.githubusercontent.com/valyefimov/engram/main/docs/public/demo-poster.png" width="760" alt="engram demo — click to watch"></a>
 </p>
 
 ---
@@ -69,16 +69,16 @@ Then tell your agent: **"use engram."** From that moment it:
 
 <table>
   <tr>
-    <td><img src="docs/public/screenshots/why.png" alt="engram why"></td>
-    <td><img src="docs/public/screenshots/context.png" alt="engram context"></td>
+    <td><img src="https://raw.githubusercontent.com/valyefimov/engram/main/docs/public/screenshots/why.png" alt="engram why"></td>
+    <td><img src="https://raw.githubusercontent.com/valyefimov/engram/main/docs/public/screenshots/context.png" alt="engram context"></td>
   </tr>
   <tr>
     <td align="center"><code>engram why sessions</code></td>
     <td align="center"><code>engram context "speed up login"</code></td>
   </tr>
   <tr>
-    <td><img src="docs/public/screenshots/check.png" alt="engram check"></td>
-    <td><img src="docs/public/screenshots/init.png" alt="engram init"></td>
+    <td><img src="https://raw.githubusercontent.com/valyefimov/engram/main/docs/public/screenshots/check.png" alt="engram check"></td>
+    <td><img src="https://raw.githubusercontent.com/valyefimov/engram/main/docs/public/screenshots/init.png" alt="engram init"></td>
   </tr>
   <tr>
     <td align="center"><code>engram check "add retries…"</code></td>
@@ -161,8 +161,8 @@ Read more: [Concepts](https://valyefimov.github.io/engram/guide/concepts) · [Ho
 
 ## Contributing
 
-Issues and PRs are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+Issues and PRs are welcome — see [CONTRIBUTING.md](https://github.com/valyefimov/engram/blob/main/CONTRIBUTING.md).
 
 ## License
 
-[MIT](LICENSE) © Valentyn Yefimov
+[MIT](https://github.com/valyefimov/engram/blob/main/LICENSE) © Valentyn Yefimov

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/public/logo.svg" width="96" alt="engram">
+  <img src="https://raw.githubusercontent.com/valyefimov/engram/main/docs/public/logo.svg" width="96" alt="engram">
 </p>
 
 <h1 align="center">engram</h1>
@@ -14,12 +14,12 @@
   <a href="https://valyefimov.github.io/engram/uk/">Документація</a> ·
   <a href="https://valyefimov.github.io/engram/uk/guide/getting-started">Швидкий старт</a> ·
   <a href="https://valyefimov.github.io/engram/demo.uk.mp4">Демо-відео</a> ·
-  <a href="README.md">English</a> ·
-  <a href="README.ru.md">Русский</a>
+  <a href="https://github.com/valyefimov/engram/blob/main/README.md">English</a> ·
+  <a href="https://github.com/valyefimov/engram/blob/main/translations/README.ru.md">Русский</a>
 </p>
 
 <p align="center">
-  <a href="https://valyefimov.github.io/engram/demo.uk.mp4"><img src="docs/public/demo-poster.png" width="760" alt="демо engram"></a>
+  <a href="https://valyefimov.github.io/engram/demo.uk.mp4"><img src="https://raw.githubusercontent.com/valyefimov/engram/main/docs/public/demo-poster.png" width="760" alt="демо engram"></a>
 </p>
 
 ---
@@ -98,4 +98,4 @@ engram export --format md -o docs/MEMORY.md     # читабельне вива�
 
 ## Ліцензія
 
-[MIT](LICENSE) © Валентин Єфімов
+[MIT](https://github.com/valyefimov/engram/blob/main/LICENSE) © Валентин Єфімов

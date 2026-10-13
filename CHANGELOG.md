@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 — 2026-10-13
+
+- Fix the package page on npm: it rendered the Ukrainian README instead of the English one. Translated READMEs now live in `translations/` and are no longer part of the package.
+- READMEs use absolute image and link URLs so they render the same on GitHub and npm.
+
 ## 1.0.0 — 2026-10-13
 
 First public release. (`0.1.0` was published briefly as a pre-release and is superseded by this version.)

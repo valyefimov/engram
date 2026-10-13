@@ -1,6 +1,6 @@
 # Програмний API
 
-Усе, що роблять CLI і MCP-сервер, доступне як бібліотека.
+CLI і MCP-сервер зроблено як тонкі шари над бібліотекою, і нею можна користуватися напряму.
 
 ```ts
 import { Engram, buildContext, why, checkPitfalls } from '@vefimov/engram';
@@ -10,7 +10,7 @@ const engram = Engram.open({ root: '/path/to/repo' });
 const { memory } = engram.remember({
   kind: 'decision',
   title: 'Сесії в Postgres',
-  content: 'Failover Redis розлогінив усіх; на одну рухому частину менше.',
+  content: 'Failover Redis розлогінив усіх, а Postgres означає на одну рухому частину менше.',
   tags: ['auth', 'sessions'],
   importance: 4,
 });
@@ -27,13 +27,13 @@ engram.close();
 
 | Метод | |
 | --- | --- |
-| `Engram.open({ root?, create?, dbFile? })` | Відкрити (і створити) сховище |
-| `remember(input)` | → `{ memory, created }` |
+| `Engram.open({ root?, create?, dbFile? })` | Відкриває сховище, за потреби створює |
+| `remember(input)` | Повертає `{ memory, created }` |
 | `get(id)` / `require(id)` | |
 | `update(id, patch)` | |
 | `supersede(oldId, input, note?)` | |
 | `forget(id, { hard? })` | |
-| `search(options)` | → `SearchHit[]` |
+| `search(options)` | Повертає `SearchHit[]` |
 | `list(options)` / `all()` | |
 | `link(from, to, relation, note?)` / `unlink` / `links(id)` | |
 | `startSession` / `endSession` / `recentSessions` | |

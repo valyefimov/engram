@@ -2,8 +2,8 @@
 
 ## Вимоги
 
-- **Node.js 22.13+** (engram використовує вбудований модуль `node:sqlite` — нічого не компілюється)
-- Агент з підтримкою MCP: Claude Code, Cursor, Windsurf, Zed, Codex CLI, …
+- Node.js 22.13 або новіший. engram використовує вбудований модуль `node:sqlite`, тому нічого не компілюється.
+- Агент з підтримкою MCP: Claude Code, Cursor, Windsurf, Zed, Codex CLI та інші.
 
 ## 1. Ініціалізуйте проєкт
 
@@ -13,7 +13,7 @@
 npx @vefimov/engram init
 ```
 
-або глобально:
+Або поставте глобально:
 
 ```bash
 npm i -g @vefimov/engram
@@ -22,33 +22,33 @@ engram init
 
 `init` робить чотири речі:
 
-1. Створює `.engram/` з `config.json`, локальним SQLite-індексом і `memories.jsonl`.
-2. Реєструє MCP-сервер для агентів (`.mcp.json` для Claude Code, `.cursor/mcp.json` для Cursor).
-3. Встановлює шість готових [skills](../reference/skills) у `.claude/skills/` і додає короткий розділ про пам’ять у `CLAUDE.md` (або правило Cursor / `AGENTS.md`).
-4. Індексує те, що репозиторій уже знає: ADR стають рішеннями, з git-історії витягуються hotspots і відкочені коміти.
+1. Створює `.engram/` з `config.json`, локальним індексом SQLite і `memories.jsonl`.
+2. Реєструє MCP-сервер для агентів: `.mcp.json` для Claude Code, `.cursor/mcp.json` для Cursor.
+3. Копіює шість [skills](../reference/skills) у `.claude/skills/` і додає короткий розділ про пам’ять у `CLAUDE.md` (або правило для Cursor, або `AGENTS.md`).
+4. Імпортує те, що репозиторій уже знає. ADR стають рішеннями, а з історії git беруться файли, що часто змінюються, і відкати.
 
-Агентів можна вказати явно через `--agent`:
+За замовчуванням агенти визначаються автоматично. Обрати їх можна через `--agent`:
 
 ```bash
 engram init --agent claude,cursor,agents-md
 engram init --agent all
 ```
 
-## 2. Перезапустіть агента й скажіть чарівні слова
+## 2. Перезапустіть агента
 
-Перезапустіть агента, щоб він підхопив MCP-сервер, потім:
+Перезапустіть агента, щоб він підхопив MCP-сервер, і скажіть:
 
 > Використовуй engram.
 
-Сервер віддає інструкції, які пояснюють агенту, *коли* читати й писати пам’ять, — зазвичай цього достатньо. У Claude Code skills можна викликати напряму: `/recall auth`, `/why-we-did-this sessions`, `/remember-decision …`.
+Сервер надсилає інструкції, у яких сказано, коли агентові читати й писати пам’ять, і цього зазвичай вистачає. У Claude Code skills можна викликати й напряму: `/recall auth`, `/why-we-did-this sessions`, `/remember-decision …`.
 
-## 3. Дивіться, як росте пам’ять
+## 3. Подивіться, що він знає
 
 ```bash
-engram status             # що знає engram
+engram status             # лічильники й остання активність
 engram recall payments    # пошук
 engram why sessions       # історія теми
-engram context "додати ретраї в платіжний клієнт"   # що побачить агент
+engram context "додати ретраї в платіжний клієнт"   # брифінг, який отримає агент
 engram summary            # огляд проєкту
 ```
 
@@ -59,11 +59,11 @@ git add .engram/memories.jsonl .engram/config.json .mcp.json CLAUDE.md .claude/s
 git commit -m "chore: add engram project memory"
 ```
 
-`.engram/engram.db` — локальний кеш, він у `.gitignore`. Коли колеги роблять pull, їхній engram автоматично вливає новий `memories.jsonl`. Див. [Командна пам’ять](./team).
+`.engram/engram.db` править за локальний кеш і лежить у `.gitignore`. Коли колега робить pull, його engram сам вливає новий `memories.jsonl`. Див. [командну пам’ять](./team).
 
 ## Наповніть самі
 
-Не обов’язково чекати на агента. Запишіть те, на чому новачки завжди спотикаються:
+Чекати на агента необов’язково. Запишіть те, на чому новачки спотикаються завжди:
 
 ```bash
 engram remember "Жодних ORM у гарячому шляху" -k principle -i 5 \
@@ -75,22 +75,22 @@ engram remember "Вебхукам Stripe потрібне сире тіло за
 
 ## Скриншоти
 
-**`engram init`**
+`engram init`
 
 ![engram init](/screenshots/init.png)
 
-**`engram why sessions`**
+`engram why sessions`
 
 ![engram why sessions](/screenshots/why.png)
 
-**`engram check`**
+`engram check`
 
 ![engram check](/screenshots/check.png)
 
-**`engram context`**
+`engram context`
 
 ![engram context](/screenshots/context.png)
 
-**`engram status`**
+`engram status`
 
 ![engram status](/screenshots/status.png)

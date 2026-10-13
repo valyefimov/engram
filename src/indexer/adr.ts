@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { join, relative, sep } from 'node:path';
 import type { Engram } from '../store/engram.js';
 import type { MemoryStatus } from '../types.js';
 
@@ -109,7 +109,8 @@ export function indexAdrs(engram: Engram): AdrIndexResult {
 
   engram.batch(() => {
     for (const abs of findAdrFiles(engram.root, engram.config.indexer.adrDirs)) {
-      const file = relative(engram.root, abs);
+      // memories store posix paths so they match across machines
+      const file = relative(engram.root, abs).split(sep).join('/');
       const adr = parseAdr(file, readFileSync(abs, 'utf8'));
       const source = `adr:${file}`;
       const tags = ['adr'];
